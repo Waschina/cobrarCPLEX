@@ -1,0 +1,20 @@
+## Use the C++ compiler
+CXX=@CXX@
+CXX_STD=CXX11
+
+## Include compiler and linker flags
+PKG_CPPFLAGS=@PKG_CPPFLAGS@
+PKG_LIBS=@PKG_LIBS@
+
+## Set the flags for building shared libraries
+SHLIB_CXXLD=$(CXX)
+SHLIB_CXXLDFLAGS=-shared
+
+## Use the flags set up by configure
+## Add additional flags if necessary for your package
+CXXFLAGS+= $(SHLIB_CXXLDFLAGS) $(PKG_CPPFLAGS) $(CXXFLAGS)
+CPPFLAGS+= $(PKG_CPPFLAGS)
+
+## Linking the libraries
+LIBS=$(PKG_LIBS)
+

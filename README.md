@@ -4,14 +4,14 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of cobrarCPLEX is to ...
+The goal of cobrarCPLEX is make IBM's ILOG CPLEX solver accessible to [cobrar](https://github.com/Waschina/cobrar).
 
 ## Installation
 
 You can install the development version of cobrarCPLEX like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+remotes::install_github("Waschina/cobrarCPLEX")
 ```
 
 ## Example
