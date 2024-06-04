@@ -44,11 +44,53 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// addColsLP
+SEXP addColsLP(SEXP xp, SEXP ncols);
+RcppExport SEXP _cobrarCPLEX_addColsLP(SEXP xpSEXP, SEXP ncolsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ncols(ncolsSEXP);
+    rcpp_result_gen = Rcpp::wrap(addColsLP(xp, ncols));
+    return rcpp_result_gen;
+END_RCPP
+}
+// addRowsLP
+SEXP addRowsLP(SEXP xp, SEXP nrows);
+RcppExport SEXP _cobrarCPLEX_addRowsLP(SEXP xpSEXP, SEXP nrowsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type nrows(nrowsSEXP);
+    rcpp_result_gen = Rcpp::wrap(addRowsLP(xp, nrows));
+    return rcpp_result_gen;
+END_RCPP
+}
+// loadMatrixLP
+SEXP loadMatrixLP(SEXP xp, SEXP ne, SEXP ia, SEXP ja, SEXP ra);
+RcppExport SEXP _cobrarCPLEX_loadMatrixLP(SEXP xpSEXP, SEXP neSEXP, SEXP iaSEXP, SEXP jaSEXP, SEXP raSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ne(neSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ia(iaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ja(jaSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ra(raSEXP);
+    rcpp_result_gen = Rcpp::wrap(loadMatrixLP(xp, ne, ia, ja, ra));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cobrarCPLEX_getCPLEXVersion", (DL_FUNC) &_cobrarCPLEX_getCPLEXVersion, 0},
     {"_cobrarCPLEX_initProb", (DL_FUNC) &_cobrarCPLEX_initProb, 1},
     {"_cobrarCPLEX_setObjDirLP", (DL_FUNC) &_cobrarCPLEX_setObjDirLP, 2},
+    {"_cobrarCPLEX_addColsLP", (DL_FUNC) &_cobrarCPLEX_addColsLP, 2},
+    {"_cobrarCPLEX_addRowsLP", (DL_FUNC) &_cobrarCPLEX_addRowsLP, 2},
+    {"_cobrarCPLEX_loadMatrixLP", (DL_FUNC) &_cobrarCPLEX_loadMatrixLP, 5},
     {NULL, NULL, 0}
 };
 

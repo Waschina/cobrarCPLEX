@@ -74,10 +74,9 @@ SEXP addRowsLP(SEXP xp, SEXP nrows) {
 
   IloRangeArray c(env);
 
-  for (int i = 0; i < numRows; i++) {
-    c.add(IloRange(env, 0, 0));
-  }
+  c.setSize(numRows);
 
+  // Update model
   model.add(c);
 
   return Rf_ScalarInteger(numRows);
@@ -85,23 +84,27 @@ SEXP addRowsLP(SEXP xp, SEXP nrows) {
 
 // Load matrix
 // [[Rcpp::export]]
-SEXP loadMatrixLP(SEXP xp, SEXP rind, SEXP cind, SEXP vals) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-  IntegerVector row_indices(rind);
-  IntegerVector col_indices(cind);
-  NumericVector values(vals);
+SEXP loadMatrixLP(SEXP xp, SEXP ne, SEXP ia, SEXP ja, SEXP ra) {
+  SEXP out = R_NilValue;
 
+  const int *ria = INTEGER(ia);
+  const int *rja = INTEGER(ja);
+  const double *rra = REAL(ra);
+  const int rne = Rf_asInteger(ne);
+
+  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
   IloModel model = cplex->getModel();
   IloEnv env = model.getEnv();
 
-  model.
-  int numElements = row_indices.size();
-  for (int i = 0; i < numElements; i++) {
-    int ri = row_indices[i];
-    int ci = col_indices[i];
-    double val = values[i];
-    cplex->add(IloRange(env, val, cplex->getVar(ci), val));
+  IloNumVarArray x(env);
+  IloRangeArray c(env);
+
+  for (int i = 0; i < rne; i++) {
+    c[i].setLinearCoef(x[i], rra[i]);
   }
+
+  // Update model
+  model.add(c);
 
   return R_NilValue;
 }

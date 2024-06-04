@@ -1,7 +1,9 @@
+
+
 # some GLPK specific codes:
 glpkPar <- list(
   CPX_MIN = 1,
-  CPX_MAX = -1,
+  CPX_MAX = -1
 )
 
 
@@ -22,7 +24,6 @@ setMethod(f = "initialize",
             return(.Object)
           }
 )
-
 
 setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
 

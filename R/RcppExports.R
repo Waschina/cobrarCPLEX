@@ -13,3 +13,15 @@ setObjDirLP <- function(xp, dir) {
     .Call(`_cobrarCPLEX_setObjDirLP`, xp, dir)
 }
 
+addColsLP <- function(xp, ncols) {
+    .Call(`_cobrarCPLEX_addColsLP`, xp, ncols)
+}
+
+addRowsLP <- function(xp, nrows) {
+    .Call(`_cobrarCPLEX_addRowsLP`, xp, nrows)
+}
+
+loadMatrixLP <- function(xp, ne, ia, ja, ra) {
+    .Call(`_cobrarCPLEX_loadMatrixLP`, xp, ne, ia, ja, ra)
+}
+
