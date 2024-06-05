@@ -59,7 +59,7 @@ Rcpp::List initProb(const char* name) {
   IloRangeArray* c  = new IloRangeArray(*env);
   IloObjective* obj = new IloObjective(*env);
 
-  // cplex->setParam(IloCplex::Param::Simplex::Display, 0); // Suppress output
+  cplex->setParam(IloCplex::Param::Simplex::Display, 0); // Suppress output
 
   // cplex object with pointer
   SEXP xp = R_MakeExternalPtr(cplex, R_NilValue, R_NilValue);
@@ -130,7 +130,7 @@ SEXP addRowsLP(SEXP xpenv, SEXP xpc, SEXP nrows) {
   IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
   int numRows = Rf_asInteger(nrows);
 
-  c->add(IloRangeArray(*env, IloInt(numRows), -IloInfinity, IloInfinity));
+  c->add(IloRangeArray(*env, IloInt(numRows),IloNum(-IloInfinity), IloNum(IloInfinity)));
 
   // std::cout << "Nr. of rows: " << c->getSize() << std::endl;
 
@@ -139,10 +139,9 @@ SEXP addRowsLP(SEXP xpenv, SEXP xpc, SEXP nrows) {
 
 // Load matrix
 // [[Rcpp::export]]
-SEXP loadMatrixLP(SEXP xpenv, SEXP xpx, SEXP xpc, SEXP ne, SEXP ia, SEXP ja, SEXP ra) {
+SEXP loadMatrixLP(SEXP xpx, SEXP xpc, SEXP ne, SEXP ia, SEXP ja, SEXP ra) {
   SEXP out = R_NilValue;
 
-  IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
   IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(xpc);
   IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
 
@@ -201,22 +200,42 @@ SEXP setColsBndsObjCoefsLP(SEXP xpobj, SEXP xpx, SEXP indices, SEXP lb, SEXP ub,
 //   return R_NilValue;
 // }
 //
-// // Set row bounds
-// // [[Rcpp::export]]
-// SEXP setRowsBndsLP(SEXP xp, SEXP indices, SEXP lb, SEXP ub) {
-//   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-//   IntegerVector inds(indices);
-//   NumericVector lbs(lb);
-//   NumericVector ubs(ub);
-//
-//   for (int i = 0; i < inds.size(); i++) {
-//     IloRange range = cplex->getRange(inds[i]);
-//     range.setBounds(lbs[i], ubs[i]);
-//   }
-//
-//   return R_NilValue;
-// }
-//
 
+
+// Set row bounds
+// [[Rcpp::export]]
+SEXP setRowsBndsLP(SEXP xpc, SEXP indices, SEXP lb, SEXP ub) {
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(xpc);
+  IntegerVector inds(indices);
+  NumericVector lbs(lb);
+  NumericVector ubs(ub);
+
+  for (int i = 0; i < inds.size(); i++) {
+    (*c)[inds[i]].setBounds(lbs[i], ubs[i]);
+  }
+
+  return R_NilValue;
+}
+
+// solve LP with cplex
+// [[Rcpp::export]]
+SEXP solveCPLEX(SEXP xp,SEXP xpmod, SEXP xpx, SEXP xpc, SEXP xpobj) {
+  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(xpobj);
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(xpc);
+  IloModel* model = (IloModel*)R_ExternalPtrAddr(xpmod);
+  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
+
+  model->add(*x);
+  model->add(*c);
+  model->add(*obj);
+
+  cplex->solve();
+
+
+  std::cout << "Obj: " << cplex->getObjValue() << std::endl;
+
+  return R_NilValue;
+}
 
 

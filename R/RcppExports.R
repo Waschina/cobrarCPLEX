@@ -21,11 +21,19 @@ addRowsLP <- function(xpenv, xpc, nrows) {
     .Call(`_cobrarCPLEX_addRowsLP`, xpenv, xpc, nrows)
 }
 
-loadMatrixLP <- function(xpenv, xpx, xpc, ne, ia, ja, ra) {
-    .Call(`_cobrarCPLEX_loadMatrixLP`, xpenv, xpx, xpc, ne, ia, ja, ra)
+loadMatrixLP <- function(xpx, xpc, ne, ia, ja, ra) {
+    .Call(`_cobrarCPLEX_loadMatrixLP`, xpx, xpc, ne, ia, ja, ra)
 }
 
 setColsBndsObjCoefsLP <- function(xpobj, xpx, indices, lb, ub, objCoefs) {
     .Call(`_cobrarCPLEX_setColsBndsObjCoefsLP`, xpobj, xpx, indices, lb, ub, objCoefs)
+}
+
+setRowsBndsLP <- function(xpc, indices, lb, ub) {
+    .Call(`_cobrarCPLEX_setRowsBndsLP`, xpc, indices, lb, ub)
+}
+
+solveCPLEX <- function(xp, xpenv, xpmod, xpx, xpc, xpobj) {
+    .Call(`_cobrarCPLEX_solveCPLEX`, xp, xpenv, xpmod, xpx, xpc, xpobj)
 }
 

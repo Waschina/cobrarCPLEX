@@ -82,30 +82,22 @@ setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
             #   setColsKind(lp, j = c(1:nCols), kind = cctype)
             # }
             #
-            # # right hand side
-            # # Note: This is the steady state condition: Production of internal
-            # # metabolites should equal the consumption. In over words:
-            # # row lower bound = row upper bounds = 0
-            # if (is.null(rub)) {
-            #   # The values in rlb will be copied to rub. GLPK ignores rlb and rub,
-            #   # depending on the constraint type (e.g. an upper bound, if the
-            #   # constraint type says, it has a lower bound):
-            #   # Constraint type "L": ignore rub
-            #   # Constraint type "U": ignore rlb
-            #   # Constraint type "E": ignore rub
-            #   # Constraint type "F": ignore rlb and rub
-            #
-            #   crub <- rlb
-            # }
-            # else {
-            #   crub <- rub
-            # }
-            # stopifnot(length(rlb) == length(crub))
-            # setRowsBnds(lp,
-            #             i = c(1:nRows),
-            #             lb = rlb,
-            #             ub = crub,
-            #             type = rtype)
+            # right hand side
+            # Note: This is the steady state condition: Production of internal
+            # metabolites should equal the consumption. In over words:
+            # row lower bound = row upper bounds = 0
+            if (is.null(rub)) {
+              crub <- rlb
+            }
+            else {
+              crub <- rub
+            }
+            stopifnot(length(rlb) == length(crub))
+            setRowsBnds(lp,
+                        i = c(1:nRows)-1,
+                        lb = rlb,
+                        ub = crub,
+                        type = rtype)
 
 
           }
@@ -136,7 +128,7 @@ setMethod("addRows", signature(lp = "LPproblem_cplex"),
 
 setMethod("loadMatrix", signature(lp = "LPproblem_cplex"),
           function(lp, ne, ia, ja, ra) {
-            loadMatrixLP(lp@ptr.env, lp@ptr.x, lp@ptr.c,
+            loadMatrixLP(lp@ptr.x, lp@ptr.c,
                          as.integer(ne),
                          as.integer(ia),
                          as.integer(ja),
@@ -157,41 +149,60 @@ setMethod("setColsBndsObjCoefs", signature(lp = "LPproblem_cplex"),
 )
 
 
-setMethod("setColsKind", signature(lp = "LPproblem_cplex"),
-          function(lp, j, kind) {
-            setColsKindLP(lp@ptr,
-                          as.integer(j),
-                          as.integer(kind))
-          }
-)
+# setMethod("setColsKind", signature(lp = "LPproblem_cplex"),
+#           function(lp, j, kind) {
+#             setColsKindLP(lp@ptr,
+#                           as.integer(j),
+#                           as.integer(kind))
+#           }
+# )
 
 
 setMethod("setRowsBnds", signature(lp = "LPproblem_cplex"),
           function(lp, i, lb, ub , type) {
 
 
-            type <- sapply(type,
-                           function(x) switch(EXPR = x,
-                                              "F" = glpkPar$GLP_FR,
-                                              "L" = glpkPar$GLP_LO,
-                                              "U" = glpkPar$GLP_UP,
-                                              "D" = glpkPar$GLP_DB,
-                                              "E" = glpkPar$GLP_FX,
-                                              glpkPar$GLP_FX))
+            # type <- sapply(type,
+            #                function(x) switch(EXPR = x,
+            #                                   "F" = glpkPar$GLP_FR,
+            #                                   "L" = glpkPar$GLP_LO,
+            #                                   "U" = glpkPar$GLP_UP,
+            #                                   "D" = glpkPar$GLP_DB,
+            #                                   "E" = glpkPar$GLP_FX,
+            #                                   glpkPar$GLP_FX))
+            #
+            # if (is.null(type)) {
+            #   Ctype <- as.null(type)
+            # }
+            # else {
+            #   Ctype <- as.integer(type)
+            # }
+            indE <- which(type == "E")
+            ub[indE] <- lb[indE]
 
-            if (is.null(type)) {
-              Ctype <- as.null(type)
-            }
-            else {
-              Ctype <- as.integer(type)
-            }
+            indU <- which(type == "U")
+            lb[indU] <- -Inf
 
-            setRowsBndsLP(lp@ptr,
+            indL <- which(type == "L")
+            ub[indL] <- Inf
+
+            indF <- which(type == "F")
+            lb[indF] <- -Inf
+            ub[indF] <- Inf
+
+            setRowsBndsLP(lp@ptr.c,
                           as.integer(i),
-                          Ctype,
+                          #Ctype,
                           as.numeric(lb),
                           as.numeric(ub))
 
           }
 )
 
+setMethod("solveLp", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+            out <- solveCPLEX(lp@ptr, lp@ptr.mod, lp@ptr.x, lp@ptr.c, lp@ptr.obj)
+
+            return(out)
+          }
+)
