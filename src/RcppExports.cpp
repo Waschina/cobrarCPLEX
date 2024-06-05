@@ -22,7 +22,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // initProb
-SEXP initProb(const char* name);
+Rcpp::List initProb(const char* name);
 RcppExport SEXP _cobrarCPLEX_initProb(SEXP nameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -33,53 +33,73 @@ BEGIN_RCPP
 END_RCPP
 }
 // setObjDirLP
-SEXP setObjDirLP(SEXP xp, int dir);
-RcppExport SEXP _cobrarCPLEX_setObjDirLP(SEXP xpSEXP, SEXP dirSEXP) {
+SEXP setObjDirLP(SEXP xpobj, int dir);
+RcppExport SEXP _cobrarCPLEX_setObjDirLP(SEXP xpobjSEXP, SEXP dirSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpobj(xpobjSEXP);
     Rcpp::traits::input_parameter< int >::type dir(dirSEXP);
-    rcpp_result_gen = Rcpp::wrap(setObjDirLP(xp, dir));
+    rcpp_result_gen = Rcpp::wrap(setObjDirLP(xpobj, dir));
     return rcpp_result_gen;
 END_RCPP
 }
 // addColsLP
-SEXP addColsLP(SEXP xp, SEXP ncols);
-RcppExport SEXP _cobrarCPLEX_addColsLP(SEXP xpSEXP, SEXP ncolsSEXP) {
+SEXP addColsLP(SEXP xpenv, SEXP xpx, SEXP ncols);
+RcppExport SEXP _cobrarCPLEX_addColsLP(SEXP xpenvSEXP, SEXP xpxSEXP, SEXP ncolsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpenv(xpenvSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ncols(ncolsSEXP);
-    rcpp_result_gen = Rcpp::wrap(addColsLP(xp, ncols));
+    rcpp_result_gen = Rcpp::wrap(addColsLP(xpenv, xpx, ncols));
     return rcpp_result_gen;
 END_RCPP
 }
 // addRowsLP
-SEXP addRowsLP(SEXP xp, SEXP nrows);
-RcppExport SEXP _cobrarCPLEX_addRowsLP(SEXP xpSEXP, SEXP nrowsSEXP) {
+SEXP addRowsLP(SEXP xpenv, SEXP xpc, SEXP nrows);
+RcppExport SEXP _cobrarCPLEX_addRowsLP(SEXP xpenvSEXP, SEXP xpcSEXP, SEXP nrowsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpenv(xpenvSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
     Rcpp::traits::input_parameter< SEXP >::type nrows(nrowsSEXP);
-    rcpp_result_gen = Rcpp::wrap(addRowsLP(xp, nrows));
+    rcpp_result_gen = Rcpp::wrap(addRowsLP(xpenv, xpc, nrows));
     return rcpp_result_gen;
 END_RCPP
 }
 // loadMatrixLP
-SEXP loadMatrixLP(SEXP xp, SEXP ne, SEXP ia, SEXP ja, SEXP ra);
-RcppExport SEXP _cobrarCPLEX_loadMatrixLP(SEXP xpSEXP, SEXP neSEXP, SEXP iaSEXP, SEXP jaSEXP, SEXP raSEXP) {
+SEXP loadMatrixLP(SEXP xpenv, SEXP xpx, SEXP xpc, SEXP ne, SEXP ia, SEXP ja, SEXP ra);
+RcppExport SEXP _cobrarCPLEX_loadMatrixLP(SEXP xpenvSEXP, SEXP xpxSEXP, SEXP xpcSEXP, SEXP neSEXP, SEXP iaSEXP, SEXP jaSEXP, SEXP raSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpenv(xpenvSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ne(neSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ia(iaSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ja(jaSEXP);
     Rcpp::traits::input_parameter< SEXP >::type ra(raSEXP);
-    rcpp_result_gen = Rcpp::wrap(loadMatrixLP(xp, ne, ia, ja, ra));
+    rcpp_result_gen = Rcpp::wrap(loadMatrixLP(xpenv, xpx, xpc, ne, ia, ja, ra));
+    return rcpp_result_gen;
+END_RCPP
+}
+// setColsBndsObjCoefsLP
+SEXP setColsBndsObjCoefsLP(SEXP xpobj, SEXP xpx, SEXP indices, SEXP lb, SEXP ub, SEXP objCoefs);
+RcppExport SEXP _cobrarCPLEX_setColsBndsObjCoefsLP(SEXP xpobjSEXP, SEXP xpxSEXP, SEXP indicesSEXP, SEXP lbSEXP, SEXP ubSEXP, SEXP objCoefsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xpobj(xpobjSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type indices(indicesSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type lb(lbSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ub(ubSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type objCoefs(objCoefsSEXP);
+    rcpp_result_gen = Rcpp::wrap(setColsBndsObjCoefsLP(xpobj, xpx, indices, lb, ub, objCoefs));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -88,9 +108,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cobrarCPLEX_getCPLEXVersion", (DL_FUNC) &_cobrarCPLEX_getCPLEXVersion, 0},
     {"_cobrarCPLEX_initProb", (DL_FUNC) &_cobrarCPLEX_initProb, 1},
     {"_cobrarCPLEX_setObjDirLP", (DL_FUNC) &_cobrarCPLEX_setObjDirLP, 2},
-    {"_cobrarCPLEX_addColsLP", (DL_FUNC) &_cobrarCPLEX_addColsLP, 2},
-    {"_cobrarCPLEX_addRowsLP", (DL_FUNC) &_cobrarCPLEX_addRowsLP, 2},
-    {"_cobrarCPLEX_loadMatrixLP", (DL_FUNC) &_cobrarCPLEX_loadMatrixLP, 5},
+    {"_cobrarCPLEX_addColsLP", (DL_FUNC) &_cobrarCPLEX_addColsLP, 3},
+    {"_cobrarCPLEX_addRowsLP", (DL_FUNC) &_cobrarCPLEX_addRowsLP, 3},
+    {"_cobrarCPLEX_loadMatrixLP", (DL_FUNC) &_cobrarCPLEX_loadMatrixLP, 7},
+    {"_cobrarCPLEX_setColsBndsObjCoefsLP", (DL_FUNC) &_cobrarCPLEX_setColsBndsObjCoefsLP, 6},
     {NULL, NULL, 0}
 };
 

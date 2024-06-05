@@ -4,46 +4,106 @@
 
 using namespace Rcpp;
 
-IloEnv env;
-
 // Get CPLEX version number
 // [[Rcpp::export]]
 SEXP getCPLEXVersion() {
+  IloEnv env;
   IloModel model(env);
   IloCplex cplex(model);
   return Rf_ScalarInteger(cplex.getVersionNumber());
 }
 
 // Delete CPLEX problem
-void lpXPtrFinalizer(SEXP lp_ptr) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(lp_ptr);
+void lpXPtrFinalizer(SEXP ptr) {
+  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(ptr);
   delete cplex;
+}
+
+// Delete CPLEX environment
+void lpenvXPtrFinalizer(SEXP ptr) {
+  IloEnv* env = (IloEnv*)R_ExternalPtrAddr(ptr);
+  delete env;
+}
+
+// Delete CPLEX model
+void lpmodXPtrFinalizer(SEXP ptr) {
+  IloModel* model = (IloModel*)R_ExternalPtrAddr(ptr);
+  delete model;
+}
+
+// Delete CPLEX variable array
+void lpxXPtrFinalizer(SEXP ptr) {
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(ptr);
+  delete x;
+}
+
+// Delete CPLEX constraint array
+void lpcXPtrFinalizer(SEXP ptr) {
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(ptr);
+  delete c;
+}
+
+// Delete CPLEX constraint array
+void lpobjXPtrFinalizer(SEXP ptr) {
+  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(ptr);
+  delete obj;
 }
 
 // Initialize a CPLEX problem
 // [[Rcpp::export]]
-SEXP initProb(const char* name) {
-  IloModel model(env);
-  IloCplex *cplex = new IloCplex(model);
+Rcpp::List initProb(const char* name) {
+  IloEnv* env       = new IloEnv();
+  IloModel* model   = new IloModel(*env);
+  IloCplex* cplex   = new IloCplex(*model);
+  IloNumVarArray* x = new IloNumVarArray(*env);
+  IloRangeArray* c  = new IloRangeArray(*env);
+  IloObjective* obj = new IloObjective(*env);
 
-  cplex->setParam(IloCplex::Param::Simplex::Display, 0); // suppress output
+  // cplex->setParam(IloCplex::Param::Simplex::Display, 0); // Suppress output
 
+  // cplex object with pointer
   SEXP xp = R_MakeExternalPtr(cplex, R_NilValue, R_NilValue);
   R_RegisterCFinalizer(xp, lpXPtrFinalizer);
 
-  return xp;
+  // model object with pointer
+  SEXP xpmod = R_MakeExternalPtr(model, R_NilValue, R_NilValue);
+  R_RegisterCFinalizer(xpmod, lpmodXPtrFinalizer);
+
+  // environment object with pointer
+  SEXP xpenv = R_MakeExternalPtr(env, R_NilValue, R_NilValue);
+  R_RegisterCFinalizer(xpenv, lpenvXPtrFinalizer);
+
+  // variable array object with pointer
+  SEXP xpx = R_MakeExternalPtr(x, R_NilValue, R_NilValue);
+  R_RegisterCFinalizer(xpx, lpxXPtrFinalizer);
+
+  // constraint array object with pointer
+  SEXP xpc = R_MakeExternalPtr(c, R_NilValue, R_NilValue);
+  R_RegisterCFinalizer(xpc, lpcXPtrFinalizer);
+
+  // objective object with pointer
+  SEXP xpobj = R_MakeExternalPtr(obj, R_NilValue, R_NilValue);
+  R_RegisterCFinalizer(xpobj, lpobjXPtrFinalizer);
+
+  Rcpp::List ptrs = Rcpp::List::create(Named("cpx") = xp,
+                                       Named("env") = xpenv,
+                                       Named("mod") = xpmod,
+                                       Named("x")   = xpx,
+                                       Named("c")   = xpc,
+                                       Named("obj") = xpobj);
+
+  return ptrs;
 }
 
 // Set objective direction
 // [[Rcpp::export]]
-SEXP setObjDirLP(SEXP xp, int dir) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-  IloObjective obj = cplex->getObjective();
+SEXP setObjDirLP(SEXP xpobj, int dir) {
+  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(xpobj);
 
-  if (dir == -1) { // Assume -1 for Max, 1 for Min
-    obj.setSense(IloObjective::Maximize);
+  if (dir == -1) {
+    obj->setSense(IloObjective::Maximize);
   } else {
-    obj.setSense(IloObjective::Minimize);
+    obj->setSense(IloObjective::Minimize);
   }
 
   return R_NilValue;
@@ -51,83 +111,77 @@ SEXP setObjDirLP(SEXP xp, int dir) {
 
 // Add columns
 // [[Rcpp::export]]
-SEXP addColsLP(SEXP xp, SEXP ncols) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
+SEXP addColsLP(SEXP xpenv, SEXP xpx, SEXP ncols) {
+  IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
   int numCols = Rf_asInteger(ncols);
 
-  IloModel model = cplex->getModel();
-  IloEnv env = model.getEnv();
-  IloNumVarArray x(cplex->getModel().getEnv(), IloInt(numCols));
+  x->add(IloNumVarArray(*env, IloInt(numCols), -IloInfinity, IloInfinity, ILOFLOAT));
+
+  // std::cout << "Nr. of cols: " << x->getSize() << std::endl;
 
   return Rf_ScalarInteger(numCols);
 }
 
 // Add rows
 // [[Rcpp::export]]
-SEXP addRowsLP(SEXP xp, SEXP nrows) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-
-  IloModel model = cplex->getModel();
-  IloEnv env = model.getEnv();
-
+SEXP addRowsLP(SEXP xpenv, SEXP xpc, SEXP nrows) {
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(xpc);
+  IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
   int numRows = Rf_asInteger(nrows);
 
-  IloRangeArray c(env);
+  c->add(IloRangeArray(*env, IloInt(numRows), -IloInfinity, IloInfinity));
 
-  c.setSize(numRows);
-
-  // Update model
-  model.add(c);
+  // std::cout << "Nr. of rows: " << c->getSize() << std::endl;
 
   return Rf_ScalarInteger(numRows);
 }
 
 // Load matrix
 // [[Rcpp::export]]
-SEXP loadMatrixLP(SEXP xp, SEXP ne, SEXP ia, SEXP ja, SEXP ra) {
+SEXP loadMatrixLP(SEXP xpenv, SEXP xpx, SEXP xpc, SEXP ne, SEXP ia, SEXP ja, SEXP ra) {
   SEXP out = R_NilValue;
+
+  IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(xpc);
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
+
+  std::cout << "Nr. of rows: " << c->getSize() << std::endl;
+  std::cout << "Nr. of cols: " << x->getSize() << std::endl;
 
   const int *ria = INTEGER(ia);
   const int *rja = INTEGER(ja);
   const double *rra = REAL(ra);
   const int rne = Rf_asInteger(ne);
 
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-  IloModel model = cplex->getModel();
-  IloEnv env = model.getEnv();
-
-  IloNumVarArray x(env);
-  IloRangeArray c(env);
-
   for (int i = 0; i < rne; i++) {
-    c[i].setLinearCoef(x[i], rra[i]);
+    (*c)[ria[i]].setLinearCoef((*x)[rja[i]], rra[i]);
   }
-
-  // Update model
-  model.add(c);
 
   return R_NilValue;
 }
-//
-// // Set column bounds and objective coefficients
-// // [[Rcpp::export]]
-// SEXP setColsBndsObjCoefsLP(SEXP xp, SEXP indices, SEXP lb, SEXP ub, SEXP objCoefs) {
-//   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
-//   IntegerVector inds(indices);
-//   NumericVector lbs(lb);
-//   NumericVector ubs(ub);
-//   NumericVector coefs(objCoefs);
-//
-//   int n = inds.size();
-//   for (int i = 0; i < n; i++) {
-//     IloNumVar var = cplex->getVar(inds[i]);
-//     var.setBounds(lbs[i], ubs[i]);
-//     cplex->getObjective().setLinearCoef(var, coefs[i]);
-//   }
-//
-//   return R_NilValue;
-// }
-//
+
+
+// Set column bounds and objective coefficients
+// [[Rcpp::export]]
+SEXP setColsBndsObjCoefsLP(SEXP xpobj, SEXP xpx, SEXP indices, SEXP lb, SEXP ub, SEXP objCoefs) {
+  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(xpobj);
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
+
+  IntegerVector inds(indices);
+  NumericVector lbs(lb);
+  NumericVector ubs(ub);
+  NumericVector coefs(objCoefs);
+
+  int n = inds.size();
+  for (int i = 0; i < n; i++) {
+    obj->setLinearCoef((*x)[inds[i]], coefs[i]);
+    (*x)[inds[i]].setBounds(lbs[i],ubs[i]);
+  }
+
+  return R_NilValue;
+}
+
 // // Set column kinds (integer, binary, continuous)
 // // [[Rcpp::export]]
 // SEXP setColsKindLP(SEXP xp, SEXP indices, SEXP kinds) {

@@ -9,19 +9,23 @@ initProb <- function(name) {
     .Call(`_cobrarCPLEX_initProb`, name)
 }
 
-setObjDirLP <- function(xp, dir) {
-    .Call(`_cobrarCPLEX_setObjDirLP`, xp, dir)
+setObjDirLP <- function(xpobj, dir) {
+    .Call(`_cobrarCPLEX_setObjDirLP`, xpobj, dir)
 }
 
-addColsLP <- function(xp, ncols) {
-    .Call(`_cobrarCPLEX_addColsLP`, xp, ncols)
+addColsLP <- function(xpenv, xpx, ncols) {
+    .Call(`_cobrarCPLEX_addColsLP`, xpenv, xpx, ncols)
 }
 
-addRowsLP <- function(xp, nrows) {
-    .Call(`_cobrarCPLEX_addRowsLP`, xp, nrows)
+addRowsLP <- function(xpenv, xpc, nrows) {
+    .Call(`_cobrarCPLEX_addRowsLP`, xpenv, xpc, nrows)
 }
 
-loadMatrixLP <- function(xp, ne, ia, ja, ra) {
-    .Call(`_cobrarCPLEX_loadMatrixLP`, xp, ne, ia, ja, ra)
+loadMatrixLP <- function(xpenv, xpx, xpc, ne, ia, ja, ra) {
+    .Call(`_cobrarCPLEX_loadMatrixLP`, xpenv, xpx, xpc, ne, ia, ja, ra)
+}
+
+setColsBndsObjCoefsLP <- function(xpobj, xpx, indices, lb, ub, objCoefs) {
+    .Call(`_cobrarCPLEX_setColsBndsObjCoefsLP`, xpobj, xpx, indices, lb, ub, objCoefs)
 }
 
