@@ -33,7 +33,35 @@ setRowsBndsLP <- function(xpc, indices, lb, ub) {
     .Call(`_cobrarCPLEX_setRowsBndsLP`, xpc, indices, lb, ub)
 }
 
-solveCPLEX <- function(xp, xpenv, xpmod, xpx, xpc, xpobj) {
-    .Call(`_cobrarCPLEX_solveCPLEX`, xp, xpenv, xpmod, xpx, xpc, xpobj)
+solveCPLEX <- function(xp, xpmod, xpx, xpc, xpobj) {
+    .Call(`_cobrarCPLEX_solveCPLEX`, xp, xpmod, xpx, xpc, xpobj)
+}
+
+getSolStatLP <- function(xp) {
+    .Call(`_cobrarCPLEX_getSolStatLP`, xp)
+}
+
+getObjVal <- function(xp) {
+    .Call(`_cobrarCPLEX_getObjVal`, xp)
+}
+
+getColsPrimalLP <- function(xp, xpenv, xpx) {
+    .Call(`_cobrarCPLEX_getColsPrimalLP`, xp, xpenv, xpx)
+}
+
+getColsDualLP <- function(xp, xpenv, xpx) {
+    .Call(`_cobrarCPLEX_getColsDualLP`, xp, xpenv, xpx)
+}
+
+getNumRowsLP <- function(xpc) {
+    .Call(`_cobrarCPLEX_getNumRowsLP`, xpc)
+}
+
+setMatRowLP <- function(xpx, xpc, i, len, ind, val) {
+    .Call(`_cobrarCPLEX_setMatRowLP`, xpx, xpc, i, len, ind, val)
+}
+
+fvaLP <- function(xp, xpmod, xpx, xpc, xpobj, ind) {
+    .Call(`_cobrarCPLEX_fvaLP`, xp, xpmod, xpx, xpc, xpobj, ind)
 }
 

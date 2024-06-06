@@ -117,18 +117,108 @@ BEGIN_RCPP
 END_RCPP
 }
 // solveCPLEX
-SEXP solveCPLEX(SEXP xp, SEXP xpenv, SEXP xpmod, SEXP xpx, SEXP xpc, SEXP xpobj);
-RcppExport SEXP _cobrarCPLEX_solveCPLEX(SEXP xpSEXP, SEXP xpenvSEXP, SEXP xpmodSEXP, SEXP xpxSEXP, SEXP xpcSEXP, SEXP xpobjSEXP) {
+SEXP solveCPLEX(SEXP xp, SEXP xpmod, SEXP xpx, SEXP xpc, SEXP xpobj);
+RcppExport SEXP _cobrarCPLEX_solveCPLEX(SEXP xpSEXP, SEXP xpmodSEXP, SEXP xpxSEXP, SEXP xpcSEXP, SEXP xpobjSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpmod(xpmodSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpobj(xpobjSEXP);
+    rcpp_result_gen = Rcpp::wrap(solveCPLEX(xp, xpmod, xpx, xpc, xpobj));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getSolStatLP
+SEXP getSolStatLP(SEXP xp);
+RcppExport SEXP _cobrarCPLEX_getSolStatLP(SEXP xpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    rcpp_result_gen = Rcpp::wrap(getSolStatLP(xp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getObjVal
+SEXP getObjVal(SEXP xp);
+RcppExport SEXP _cobrarCPLEX_getObjVal(SEXP xpSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    rcpp_result_gen = Rcpp::wrap(getObjVal(xp));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getColsPrimalLP
+SEXP getColsPrimalLP(SEXP xp, SEXP xpenv, SEXP xpx);
+RcppExport SEXP _cobrarCPLEX_getColsPrimalLP(SEXP xpSEXP, SEXP xpenvSEXP, SEXP xpxSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
     Rcpp::traits::input_parameter< SEXP >::type xpenv(xpenvSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    rcpp_result_gen = Rcpp::wrap(getColsPrimalLP(xp, xpenv, xpx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getColsDualLP
+SEXP getColsDualLP(SEXP xp, SEXP xpenv, SEXP xpx);
+RcppExport SEXP _cobrarCPLEX_getColsDualLP(SEXP xpSEXP, SEXP xpenvSEXP, SEXP xpxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpenv(xpenvSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    rcpp_result_gen = Rcpp::wrap(getColsDualLP(xp, xpenv, xpx));
+    return rcpp_result_gen;
+END_RCPP
+}
+// getNumRowsLP
+SEXP getNumRowsLP(SEXP xpc);
+RcppExport SEXP _cobrarCPLEX_getNumRowsLP(SEXP xpcSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
+    rcpp_result_gen = Rcpp::wrap(getNumRowsLP(xpc));
+    return rcpp_result_gen;
+END_RCPP
+}
+// setMatRowLP
+SEXP setMatRowLP(SEXP xpx, SEXP xpc, SEXP i, SEXP len, SEXP ind, SEXP val);
+RcppExport SEXP _cobrarCPLEX_setMatRowLP(SEXP xpxSEXP, SEXP xpcSEXP, SEXP iSEXP, SEXP lenSEXP, SEXP indSEXP, SEXP valSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type i(iSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type len(lenSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type ind(indSEXP);
+    Rcpp::traits::input_parameter< SEXP >::type val(valSEXP);
+    rcpp_result_gen = Rcpp::wrap(setMatRowLP(xpx, xpc, i, len, ind, val));
+    return rcpp_result_gen;
+END_RCPP
+}
+// fvaLP
+Rcpp::DataFrame fvaLP(SEXP xp, SEXP xpmod, SEXP xpx, SEXP xpc, SEXP xpobj, SEXP ind);
+RcppExport SEXP _cobrarCPLEX_fvaLP(SEXP xpSEXP, SEXP xpmodSEXP, SEXP xpxSEXP, SEXP xpcSEXP, SEXP xpobjSEXP, SEXP indSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type xp(xpSEXP);
     Rcpp::traits::input_parameter< SEXP >::type xpmod(xpmodSEXP);
     Rcpp::traits::input_parameter< SEXP >::type xpx(xpxSEXP);
     Rcpp::traits::input_parameter< SEXP >::type xpc(xpcSEXP);
     Rcpp::traits::input_parameter< SEXP >::type xpobj(xpobjSEXP);
-    rcpp_result_gen = Rcpp::wrap(solveCPLEX(xp, xpenv, xpmod, xpx, xpc, xpobj));
+    Rcpp::traits::input_parameter< SEXP >::type ind(indSEXP);
+    rcpp_result_gen = Rcpp::wrap(fvaLP(xp, xpmod, xpx, xpc, xpobj, ind));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -142,7 +232,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_cobrarCPLEX_loadMatrixLP", (DL_FUNC) &_cobrarCPLEX_loadMatrixLP, 6},
     {"_cobrarCPLEX_setColsBndsObjCoefsLP", (DL_FUNC) &_cobrarCPLEX_setColsBndsObjCoefsLP, 6},
     {"_cobrarCPLEX_setRowsBndsLP", (DL_FUNC) &_cobrarCPLEX_setRowsBndsLP, 4},
-    {"_cobrarCPLEX_solveCPLEX", (DL_FUNC) &_cobrarCPLEX_solveCPLEX, 6},
+    {"_cobrarCPLEX_solveCPLEX", (DL_FUNC) &_cobrarCPLEX_solveCPLEX, 5},
+    {"_cobrarCPLEX_getSolStatLP", (DL_FUNC) &_cobrarCPLEX_getSolStatLP, 1},
+    {"_cobrarCPLEX_getObjVal", (DL_FUNC) &_cobrarCPLEX_getObjVal, 1},
+    {"_cobrarCPLEX_getColsPrimalLP", (DL_FUNC) &_cobrarCPLEX_getColsPrimalLP, 3},
+    {"_cobrarCPLEX_getColsDualLP", (DL_FUNC) &_cobrarCPLEX_getColsDualLP, 3},
+    {"_cobrarCPLEX_getNumRowsLP", (DL_FUNC) &_cobrarCPLEX_getNumRowsLP, 1},
+    {"_cobrarCPLEX_setMatRowLP", (DL_FUNC) &_cobrarCPLEX_setMatRowLP, 6},
+    {"_cobrarCPLEX_fvaLP", (DL_FUNC) &_cobrarCPLEX_fvaLP, 6},
     {NULL, NULL, 0}
 };
 

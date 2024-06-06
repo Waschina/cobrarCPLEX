@@ -94,7 +94,7 @@ setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
             }
             stopifnot(length(rlb) == length(crub))
             setRowsBnds(lp,
-                        i = c(1:nRows)-1,
+                        i = c(1:nRows),
                         lb = rlb,
                         ub = crub,
                         type = rtype)
@@ -191,7 +191,7 @@ setMethod("setRowsBnds", signature(lp = "LPproblem_cplex"),
             ub[indF] <- Inf
 
             setRowsBndsLP(lp@ptr.c,
-                          as.integer(i),
+                          as.integer(i-1),
                           #Ctype,
                           as.numeric(lb),
                           as.numeric(ub))
@@ -203,6 +203,152 @@ setMethod("solveLp", signature(lp = "LPproblem_cplex"),
           function(lp) {
             out <- solveCPLEX(lp@ptr, lp@ptr.mod, lp@ptr.x, lp@ptr.c, lp@ptr.obj)
 
+            term <- switch(EXPR = out+1,
+                           "Unknown",
+                           "Optimal",
+                           "Unbounded",
+                           "Infeasible",
+                           "InfOrUnbd",
+                           "OptimalInfeas",
+                           "NumBest",
+                           "FeasibleRelaxedSum",
+                           "OptimalRelaxedSum",
+                           "FeasibleRelaxedInf",
+                           "OptimalRelaxedInf",
+                           "FeasibleRelaxedQuad",
+                           "OptimalRelaxedQuad",
+                           "AbortRelaxed",
+                           "AbortObjLim",
+                           "AbortPrimObjLim",
+                           "AbortDualObjLim",
+                           "AbortItLim",
+                           "AbortTimeLim",
+                           "AbortDetTimeLim",
+                           "AbortUser",
+                           "OptimalFaceUnbounded",
+                           "OptimalTol",
+                           "SolLim",
+                           "PopulateSolLim",
+                           "NodeLimFeas",
+                           "NodeLimInfeas",
+                           "FailFeas",
+                           "FailInfeas",
+                           "MemLimFeas",
+                           "MemLimInfeas",
+                           "FailFeasNoTree",
+                           "FailInfeasNoTree",
+                           "ConflictFeasible",
+                           "ConflictMinimal",
+                           "ConflictAbortContradiction",
+                           "ConflictAbortTimeLim",
+                           "ConflictAbortDetTimeLim",
+                           "ConflictAbortItLim",
+                           "ConflictAbortNodeLim",
+                           "ConflictAbortObjLim",
+                           "ConflictAbortMemLim",
+                           "ConflictAbortUser",
+                           "Feasible",
+                           "OptimalPopulated",
+                           "OptimalPopulatedTol",
+                           "RelaxationUnbounded",
+                           "FirstOrder",
+                           "MultiObjOptimal",
+                           "MultiObjNonOptimal",
+                           "MultiObjInfeasible",
+                           "MultiObjUnbounded",
+                           "MultiObjInfOrUnbd",
+                           "MultiObjStopped")
+
+            if(is.null(out))
+              term <- paste("Failed to obtain solution, unknown error code:", out)
+
+
+            return(list(code= out,
+                        term = term))
+          }
+)
+
+setMethod("getSolStat", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+
+            out <- getSolStatLP(lp@ptr)
+
+            # get term
+            term <- switch(EXPR = out+1,
+                           "Unknown",
+                           "Feasible",
+                           "Optimal",
+                           "Infeasible",
+                           "Unbounded",
+                           "InfeasibleOrUnbounded",
+                           "Error")
+            if(is.null(out))
+              term <- paste("unknown status code:", out)
+
+            return(list(code = out,
+                        term = term))
+          }
+)
+
+setMethod("getObjValue", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+            out <- getObjVal(lp@ptr)
+
             return(out)
+          }
+)
+
+setMethod("getColsPrimal", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+
+            out <- getColsPrimalLP(lp@ptr, lp@ptr.env, lp@ptr.x)
+
+            return(out)
+          }
+)
+
+setMethod("getRedCosts", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+
+            out <- getColsDualLP(lp@ptr, lp@ptr.env, lp@ptr.x)
+
+            return(out)
+          }
+)
+
+setMethod("addSingleConstraint", signature(lp = "LPproblem_cplex"),
+          function(lp, coeffs, lb, ub, type) {
+
+            # add new row to constraint matrix
+            addRows(lp, nrows = 1)
+            i_newrow <- getNumRowsLP(lp@ptr.c)
+
+            nz <- which(coeffs != 0)
+
+            # add coeffs to new row
+            setMatRowLP(lp@ptr.x, lp@ptr.c,
+                        as.integer(i_newrow-1),
+                        as.integer(length(nz)),
+                        as.integer(nz-1),
+                        as.numeric(coeffs[nz]))
+
+            # set bounds
+            setRowsBnds(lp,
+                        i = i_newrow,
+                        lb = lb,
+                        ub = ub,
+                        type = type)
+
+
+          }
+)
+
+setMethod("fvaJob", signature(lp = "LPproblem_cplex"),
+          function(lp, ind) {
+
+            fvares <- fvaLP(lp@ptr, lp@ptr.mod, lp@ptr.x, lp@ptr.c, lp@ptr.obj,
+                            as.integer(ind-1))
+
+            return(fvares)
           }
 )
