@@ -12,20 +12,30 @@ else
 fi
 
 dnl get arguments
-AC_ARG_WITH([cplex-include],
-    [AS_HELP_STRING([--with-cplex-include],[specify location of CPLEX C++ include directory])],
-    CPLEX_INCLUDE=$withval,
-    CPLEX_INCLUDE="")
-
-AC_ARG_WITH([cplex-lib],
-    [AS_HELP_STRING([--with-cplex-lib],[specify location of CPLEX callable library and other libraries])],
-    CPLEX_LIB=$withval,
-    CPLEX_LIB="")
-
 AC_ARG_WITH([cplex-dir],
     [AS_HELP_STRING([--with-cplex-dir],[specify location of CPLEX installation directory])],
     CPLEX_DIR=$withval,
-    CPLEX_DIR="/opt/ibm/ILOG/CPLEX_Studio2211/cplex")
+    CPLEX_DIR="")
+
+
+# Define default CPLEX path
+DEFAULT_CPLEX_PATH="/opt/ibm/ILOG/CPLEX_Studio"
+
+# Function to check for the latest CPLEX installation in the default path
+check_latest_cplex_path() {
+    latest_version_dir=$(ls -d ${DEFAULT_CPLEX_PATH}* 2>/dev/null | sort -V | tail -n 1)
+    if test -d "$latest_version_dir/cplex/include" ; then
+        CPLEX_DIR="$latest_version_dir/cplex"
+        return 0
+    fi
+    return 1
+}
+
+# If no CPLEX_DIR is provided and not already set, check default path
+if test ["$FOUND_ALL" = "no" -a -z "$CPLEX_DIR"] ; then
+    check_latest_cplex_path
+fi
+
 
 if test ["$FOUND_ALL" = "no" -a -n "$CPLEX_DIR"] ; then
    PKG_CPPFLAGS="-I${CPLEX_DIR}/include -I${CPLEX_DIR}/include/ilcplex -I${CPLEX_DIR}/../concert/include"

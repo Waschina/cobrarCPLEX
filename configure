@@ -640,8 +640,6 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
-with_cplex_include
-with_cplex_lib
 with_cplex_dir
 '
       ac_precious_vars='build_alias
@@ -1274,9 +1272,6 @@ if test -n "$ac_init_help"; then
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
   --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-cplex-include    specify location of CPLEX C++ include directory
-  --with-cplex-lib        specify location of CPLEX callable library and other
-                          libraries
   --with-cplex-dir        specify location of CPLEX installation directory
 
 Some influential environment variables:
@@ -1810,29 +1805,31 @@ else
 fi
 
 
-# Check whether --with-cplex-include was given.
-if test "${with_cplex_include+set}" = set; then :
-  withval=$with_cplex_include; CPLEX_INCLUDE=$withval
-else
-  CPLEX_INCLUDE=""
-fi
-
-
-
-# Check whether --with-cplex-lib was given.
-if test "${with_cplex_lib+set}" = set; then :
-  withval=$with_cplex_lib; CPLEX_LIB=$withval
-else
-  CPLEX_LIB=""
-fi
-
-
-
 # Check whether --with-cplex-dir was given.
 if test "${with_cplex_dir+set}" = set; then :
   withval=$with_cplex_dir; CPLEX_DIR=$withval
 else
-  CPLEX_DIR="/opt/ibm/ILOG/CPLEX_Studio2211/cplex"
+  CPLEX_DIR=""
+fi
+
+
+
+# Define default CPLEX path
+DEFAULT_CPLEX_PATH="/opt/ibm/ILOG/CPLEX_Studio"
+
+# Function to check for the latest CPLEX installation in the default path
+check_latest_cplex_path() {
+    latest_version_dir=$(ls -d ${DEFAULT_CPLEX_PATH}* 2>/dev/null | sort -V | tail -n 1)
+    if test -d "$latest_version_dir/cplex/include" ; then
+        CPLEX_DIR="$latest_version_dir/cplex"
+        return 0
+    fi
+    return 1
+}
+
+# If no CPLEX_DIR is provided and not already set, check default path
+if test "$FOUND_ALL" = "no" -a -z "$CPLEX_DIR" ; then
+    check_latest_cplex_path
 fi
 
 
