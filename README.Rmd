@@ -31,6 +31,7 @@ You can install the development version of cobrarCPLEX like so:
 ``` r
 remotes::install_github("Waschina/cobrarCPLEX", configure.args="--with-cplex-dir=/path/to/cplex")
 ```
+<mark>Note:</mark> Please replace `/path/to/cplex` with the path to your cplex installation.
 
 E.g., in unix systems, cplex is by default installed to something like `/opt/ibm/ILOG/CPLEX_Studio2211/cplex`. Thus the command to install cobrarCPLEX would be:
 ``` r
@@ -39,7 +40,7 @@ remotes::install_github("Waschina/cobrarCPLEX", configure.args="--with-cplex-dir
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows how to use cobrarCPLEX and compares the computation time for flux balance analysis:
 
 ```{r example}
 library(cobrarCPLEX)
