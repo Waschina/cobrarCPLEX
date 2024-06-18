@@ -39,14 +39,14 @@ fi
 
 if test ["$FOUND_ALL" = "no" -a -n "$CPLEX_DIR"] ; then
    PKG_CPPFLAGS="-I${CPLEX_DIR}/include -I${CPLEX_DIR}/include/ilcplex -I${CPLEX_DIR}/../concert/include"
-   SYSTEM=`uname -m`
-   LIBFORMAT=`uname -s | tr '[:upper:]' '[:lower:]'`
-   PKG_LIBS="-L${CPLEX_DIR}/lib/x86-64_linux/static_pic -L${CPLEX_DIR}/../concert/lib/x86-64_linux/static_pic -lilocplex -lcplex -lconcert -lm -lpthread -ldl"
+   SYSTEM=`uname -m | tr '_' '-'`
+   LIBFORMAT=`uname -s | tr A-Z a-z`
+   PKG_LIBS="-L${CPLEX_DIR}/lib/${SYSTEM}_${LIBFORMAT}/static_pic -L${CPLEX_DIR}/../concert/lib/${SYSTEM}_${LIBFORMAT}/static_pic -lilocplex -lcplex -lconcert -lm -lpthread -ldl"
 
    FOUND_ALL="yes"
 fi
 
-if test "$FOUND_ALL" = "no" ; then	
+if test "$FOUND_ALL" = "no" ; then
    AC_MSG_ERROR([No CPLEX installation found])
 fi
 
