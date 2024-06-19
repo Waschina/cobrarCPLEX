@@ -1837,6 +1837,9 @@ if test "$FOUND_ALL" = "no" -a -n "$CPLEX_DIR" ; then
    PKG_CPPFLAGS="-I${CPLEX_DIR}/include -I${CPLEX_DIR}/include/ilcplex -I${CPLEX_DIR}/../concert/include"
    SYSTEM=`uname -m | tr '_' '-'`
    LIBFORMAT=`uname -s | tr A-Z a-z`
+   if test "$LIBFORMAT" = "darwin"; then
+        LIBFORMAT=osx
+   fi
    PKG_LIBS="-L${CPLEX_DIR}/lib/${SYSTEM}_${LIBFORMAT}/static_pic -L${CPLEX_DIR}/../concert/lib/${SYSTEM}_${LIBFORMAT}/static_pic -lilocplex -lcplex -lconcert -lm -lpthread -ldl"
 
    FOUND_ALL="yes"
