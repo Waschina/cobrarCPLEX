@@ -21,7 +21,7 @@ setMethod(f = "initialize",
                                 name,
                                 method) {
 
-            ptrlist <- initProb(name)
+            ptrlist <- initProb(name, COBRAR_SETTINGS("TOLERANCE"))
 
             .Object@ptr     <- ptrlist$cpx
             .Object@ptr.env <- ptrlist$env

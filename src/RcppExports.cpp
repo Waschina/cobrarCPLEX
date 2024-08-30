@@ -22,13 +22,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // initProb
-Rcpp::List initProb(const char* name);
-RcppExport SEXP _cobrarCPLEX_initProb(SEXP nameSEXP) {
+Rcpp::List initProb(const char* name, double tol_bnd);
+RcppExport SEXP _cobrarCPLEX_initProb(SEXP nameSEXP, SEXP tol_bndSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const char* >::type name(nameSEXP);
-    rcpp_result_gen = Rcpp::wrap(initProb(name));
+    Rcpp::traits::input_parameter< double >::type tol_bnd(tol_bndSEXP);
+    rcpp_result_gen = Rcpp::wrap(initProb(name, tol_bnd));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -225,7 +226,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cobrarCPLEX_getCPLEXVersion", (DL_FUNC) &_cobrarCPLEX_getCPLEXVersion, 0},
-    {"_cobrarCPLEX_initProb", (DL_FUNC) &_cobrarCPLEX_initProb, 1},
+    {"_cobrarCPLEX_initProb", (DL_FUNC) &_cobrarCPLEX_initProb, 2},
     {"_cobrarCPLEX_setObjDirLP", (DL_FUNC) &_cobrarCPLEX_setObjDirLP, 2},
     {"_cobrarCPLEX_addColsLP", (DL_FUNC) &_cobrarCPLEX_addColsLP, 3},
     {"_cobrarCPLEX_addRowsLP", (DL_FUNC) &_cobrarCPLEX_addRowsLP, 3},

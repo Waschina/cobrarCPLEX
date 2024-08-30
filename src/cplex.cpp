@@ -51,7 +51,7 @@ void lpobjXPtrFinalizer(SEXP ptr) {
 
 // Initialize a CPLEX problem
 // [[Rcpp::export]]
-Rcpp::List initProb(const char* name) {
+Rcpp::List initProb(const char* name, double tol_bnd) {
   IloEnv* env       = new IloEnv();
   IloModel* model   = new IloModel(*env);
   IloCplex* cplex   = new IloCplex(*model);
@@ -62,6 +62,9 @@ Rcpp::List initProb(const char* name) {
   // set central parameters (Output control and algorithm)
   cplex->setOut(env->getNullStream());
   cplex->setWarning(env->getNullStream());
+
+  //set feasibility/bound tolerance for simplex
+  cplex->setParam(IloCplex::Param::Simplex::Tolerances::Feasibility, tol_bnd);
 
   // cplex object with pointer
   SEXP xp = R_MakeExternalPtr(cplex, R_NilValue, R_NilValue);
@@ -264,8 +267,11 @@ SEXP getObjVal(SEXP xp) {
 
   SEXP out = R_NilValue;
   double obj;
-
-  obj = cplex->getObjValue();
+  if (cplex->getStatus() == IloAlgorithm::Optimal || cplex->getStatus() == IloAlgorithm::Feasible) {
+    obj = cplex->getObjValue();
+  } else {
+    return DoubleVector(1, DoubleVector::get_na());
+  }
 
   out = Rf_ScalarReal(obj);
 
@@ -277,6 +283,12 @@ SEXP getColsPrimalLP(SEXP xp, SEXP xpenv, SEXP xpx) {
   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
   IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
   IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
+
+  // Check the solver status before attempting to get values
+  if (cplex->getStatus() != IloAlgorithm::Optimal && cplex->getStatus() != IloAlgorithm::Feasible) {
+    // Return a vector of NAs if no feasible or optimal solution exists
+    return DoubleVector(x->getSize(), DoubleVector::get_na());
+  }
 
   IloNumArray vals(*env);
   cplex->getValues(vals, *x);
@@ -295,6 +307,12 @@ SEXP getColsDualLP(SEXP xp, SEXP xpenv, SEXP xpx) {
   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(xp);
   IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(xpx);
   IloEnv* env = (IloEnv*)R_ExternalPtrAddr(xpenv);
+
+  // Check the solver status before attempting to get values
+  if (cplex->getStatus() != IloAlgorithm::Optimal && cplex->getStatus() != IloAlgorithm::Feasible) {
+    // Return a vector of NAs if no feasible or optimal solution exists
+    return DoubleVector(x->getSize(), DoubleVector::get_na());
+  }
 
   IloNumArray vals(*env);
   cplex->getReducedCosts(vals, *x);

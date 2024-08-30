@@ -1,16 +1,16 @@
 Package: cobrarCPLEX
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Enable CPLEX as LP Solver in cobrar
+Version: 0.1.0
 Authors@R: 
     person("Silvio", "Waschina", , "s.waschina@nutrinf.uni-kiel.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6290-3593"))
-Description: What the package does (one paragraph).
+Description: A plugin for the R-package cobrar that enables CPLEX as LP solver.
 License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends:
-    cobrar
+    cobrar (>= 0.1.1)
 Remotes: 
     Waschina/cobrar
 LinkingTo: 

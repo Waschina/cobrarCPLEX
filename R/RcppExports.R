@@ -5,8 +5,8 @@ getCPLEXVersion <- function() {
     .Call(`_cobrarCPLEX_getCPLEXVersion`)
 }
 
-initProb <- function(name) {
-    .Call(`_cobrarCPLEX_initProb`, name)
+initProb <- function(name, tol_bnd) {
+    .Call(`_cobrarCPLEX_initProb`, name, tol_bnd)
 }
 
 setObjDirLP <- function(xpobj, dir) {
