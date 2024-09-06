@@ -13,41 +13,44 @@ SEXP getCPLEXVersion() {
   return Rf_ScalarInteger(cplex.getVersionNumber());
 }
 
-// Delete CPLEX problem
-void lpXPtrFinalizer(SEXP ptr) {
-  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(ptr);
-  delete cplex;
-}
+// // Delete CPLEX problem
+// void lpXPtrFinalizer(SEXP ptr) {
+//   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(ptr);
+//   delete cplex;
+// }
 
 // Delete CPLEX environment
 void lpenvXPtrFinalizer(SEXP ptr) {
   IloEnv* env = (IloEnv*)R_ExternalPtrAddr(ptr);
-  delete env;
+  if (env) {
+    env->end();
+    delete env;
+  }
 }
 
-// Delete CPLEX model
-void lpmodXPtrFinalizer(SEXP ptr) {
-  IloModel* model = (IloModel*)R_ExternalPtrAddr(ptr);
-  delete model;
-}
-
-// Delete CPLEX variable array
-void lpxXPtrFinalizer(SEXP ptr) {
-  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(ptr);
-  delete x;
-}
-
-// Delete CPLEX constraint array
-void lpcXPtrFinalizer(SEXP ptr) {
-  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(ptr);
-  delete c;
-}
-
-// Delete CPLEX constraint array
-void lpobjXPtrFinalizer(SEXP ptr) {
-  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(ptr);
-  delete obj;
-}
+// // Delete CPLEX model
+// void lpmodXPtrFinalizer(SEXP ptr) {
+//   IloModel* model = (IloModel*)R_ExternalPtrAddr(ptr);
+//   delete model;
+// }
+//
+// // Delete CPLEX variable array
+// void lpxXPtrFinalizer(SEXP ptr) {
+//   IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(ptr);
+//   delete x;
+// }
+//
+// // Delete CPLEX constraint array
+// void lpcXPtrFinalizer(SEXP ptr) {
+//   IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(ptr);
+//   delete c;
+// }
+//
+// // Delete CPLEX constraint array
+// void lpobjXPtrFinalizer(SEXP ptr) {
+//   IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(ptr);
+//   delete obj;
+// }
 
 // Initialize a CPLEX problem
 // [[Rcpp::export]]
@@ -68,11 +71,11 @@ Rcpp::List initProb(const char* name, double tol_bnd) {
 
   // cplex object with pointer
   SEXP xp = R_MakeExternalPtr(cplex, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xp, lpXPtrFinalizer);
+  // R_RegisterCFinalizer(xp, lpXPtrFinalizer);
 
   // model object with pointer
   SEXP xpmod = R_MakeExternalPtr(model, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xpmod, lpmodXPtrFinalizer);
+  // R_RegisterCFinalizer(xpmod, lpmodXPtrFinalizer);
 
   // environment object with pointer
   SEXP xpenv = R_MakeExternalPtr(env, R_NilValue, R_NilValue);
@@ -80,15 +83,15 @@ Rcpp::List initProb(const char* name, double tol_bnd) {
 
   // variable array object with pointer
   SEXP xpx = R_MakeExternalPtr(x, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xpx, lpxXPtrFinalizer);
+  // R_RegisterCFinalizer(xpx, lpxXPtrFinalizer);
 
   // constraint array object with pointer
   SEXP xpc = R_MakeExternalPtr(c, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xpc, lpcXPtrFinalizer);
+  // R_RegisterCFinalizer(xpc, lpcXPtrFinalizer);
 
   // objective object with pointer
   SEXP xpobj = R_MakeExternalPtr(obj, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xpobj, lpobjXPtrFinalizer);
+  // R_RegisterCFinalizer(xpobj, lpobjXPtrFinalizer);
 
   Rcpp::List ptrs = Rcpp::List::create(Named("cpx") = xp,
                                        Named("env") = xpenv,
