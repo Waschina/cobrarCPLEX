@@ -54,7 +54,7 @@ mod <- readSBMLmod(modfile)
 COBRAR_SETTINGS("SOLVER","glpk")
 print(system.time(fba(mod)))
 
-# FBA with GLPK
+# FBA with CPLEX
 COBRAR_SETTINGS("SOLVER","cplex")
 system.time(fba(mod))
 ```
