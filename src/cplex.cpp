@@ -55,7 +55,6 @@ void lpxXPtrFinalizer(SEXP ptr) {
     delete x;
     R_ClearExternalPtr(ptr);
   }
-  delete x;
 }
 
 // Delete CPLEX constraint array
@@ -67,7 +66,6 @@ void lpcXPtrFinalizer(SEXP ptr) {
     delete c;
     R_ClearExternalPtr(ptr);
   }
-  delete c;
 }
 
 // Delete CPLEX objective coeff array
