@@ -21,6 +21,66 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// lpXPtrFinalizer
+void lpXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
+// lpenvXPtrFinalizer
+void lpenvXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpenvXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpenvXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
+// lpmodXPtrFinalizer
+void lpmodXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpmodXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpmodXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
+// lpxXPtrFinalizer
+void lpxXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpxXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpxXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
+// lpcXPtrFinalizer
+void lpcXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpcXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpcXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
+// lpobjXPtrFinalizer
+void lpobjXPtrFinalizer(SEXP ptr);
+RcppExport SEXP _cobrarCPLEX_lpobjXPtrFinalizer(SEXP ptrSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP);
+    lpobjXPtrFinalizer(ptr);
+    return R_NilValue;
+END_RCPP
+}
 // initProb
 Rcpp::List initProb(const char* name, double tol_bnd);
 RcppExport SEXP _cobrarCPLEX_initProb(SEXP nameSEXP, SEXP tol_bndSEXP) {
@@ -226,6 +286,12 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cobrarCPLEX_getCPLEXVersion", (DL_FUNC) &_cobrarCPLEX_getCPLEXVersion, 0},
+    {"_cobrarCPLEX_lpXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpXPtrFinalizer, 1},
+    {"_cobrarCPLEX_lpenvXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpenvXPtrFinalizer, 1},
+    {"_cobrarCPLEX_lpmodXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpmodXPtrFinalizer, 1},
+    {"_cobrarCPLEX_lpxXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpxXPtrFinalizer, 1},
+    {"_cobrarCPLEX_lpcXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpcXPtrFinalizer, 1},
+    {"_cobrarCPLEX_lpobjXPtrFinalizer", (DL_FUNC) &_cobrarCPLEX_lpobjXPtrFinalizer, 1},
     {"_cobrarCPLEX_initProb", (DL_FUNC) &_cobrarCPLEX_initProb, 2},
     {"_cobrarCPLEX_setObjDirLP", (DL_FUNC) &_cobrarCPLEX_setObjDirLP, 2},
     {"_cobrarCPLEX_addColsLP", (DL_FUNC) &_cobrarCPLEX_addColsLP, 3},

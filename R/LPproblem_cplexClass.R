@@ -352,3 +352,19 @@ setMethod("fvaJob", signature(lp = "LPproblem_cplex"),
             return(fvares)
           }
 )
+
+
+setMethod("deleteLP", signature(lp = "LPproblem_cplex"),
+          function(lp) {
+            out <- TRUE
+
+            lpXPtrFinalizer(lp@ptr)
+            lpmodXPtrFinalizer(lp@ptr.mod)
+            lpobjXPtrFinalizer(lp@ptr.obj)
+            lpxXPtrFinalizer(lp@ptr.x)
+            lpcXPtrFinalizer(lp@ptr.c)
+            lpenvXPtrFinalizer(lp@ptr.env)
+
+            return(out)
+          }
+)

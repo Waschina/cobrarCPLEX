@@ -5,6 +5,30 @@ getCPLEXVersion <- function() {
     .Call(`_cobrarCPLEX_getCPLEXVersion`)
 }
 
+lpXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpXPtrFinalizer`, ptr))
+}
+
+lpenvXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpenvXPtrFinalizer`, ptr))
+}
+
+lpmodXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpmodXPtrFinalizer`, ptr))
+}
+
+lpxXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpxXPtrFinalizer`, ptr))
+}
+
+lpcXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpcXPtrFinalizer`, ptr))
+}
+
+lpobjXPtrFinalizer <- function(ptr) {
+    invisible(.Call(`_cobrarCPLEX_lpobjXPtrFinalizer`, ptr))
+}
+
 initProb <- function(name, tol_bnd) {
     .Call(`_cobrarCPLEX_initProb`, name, tol_bnd)
 }

@@ -13,44 +13,73 @@ SEXP getCPLEXVersion() {
   return Rf_ScalarInteger(cplex.getVersionNumber());
 }
 
-// // Delete CPLEX problem
-// void lpXPtrFinalizer(SEXP ptr) {
-//   IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(ptr);
-//   delete cplex;
-// }
+// Delete CPLEX problem
+// [[Rcpp::export]]
+void lpXPtrFinalizer(SEXP ptr) {
+  IloCplex* cplex = (IloCplex*)R_ExternalPtrAddr(ptr);
+  if (cplex) {
+    cplex->end();
+    delete cplex;
+    R_ClearExternalPtr(ptr);
+  }
+}
 
 // Delete CPLEX environment
+// [[Rcpp::export]]
 void lpenvXPtrFinalizer(SEXP ptr) {
   IloEnv* env = (IloEnv*)R_ExternalPtrAddr(ptr);
   if (env) {
     env->end();
     delete env;
+    R_ClearExternalPtr(ptr);
   }
 }
 
-// // Delete CPLEX model
-// void lpmodXPtrFinalizer(SEXP ptr) {
-//   IloModel* model = (IloModel*)R_ExternalPtrAddr(ptr);
-//   delete model;
-// }
-//
-// // Delete CPLEX variable array
-// void lpxXPtrFinalizer(SEXP ptr) {
-//   IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(ptr);
-//   delete x;
-// }
-//
-// // Delete CPLEX constraint array
-// void lpcXPtrFinalizer(SEXP ptr) {
-//   IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(ptr);
-//   delete c;
-// }
-//
-// // Delete CPLEX constraint array
-// void lpobjXPtrFinalizer(SEXP ptr) {
-//   IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(ptr);
-//   delete obj;
-// }
+// Delete CPLEX model
+// [[Rcpp::export]]
+void lpmodXPtrFinalizer(SEXP ptr) {
+  IloModel* model = (IloModel*)R_ExternalPtrAddr(ptr);
+  if (model) {
+    model->end();
+    delete model;
+    R_ClearExternalPtr(ptr);
+  }
+}
+
+// Delete CPLEX variable array
+// [[Rcpp::export]]
+void lpxXPtrFinalizer(SEXP ptr) {
+  IloNumVarArray* x = (IloNumVarArray*)R_ExternalPtrAddr(ptr);
+  if (x) {
+    x->end();
+    delete x;
+    R_ClearExternalPtr(ptr);
+  }
+  delete x;
+}
+
+// Delete CPLEX constraint array
+// [[Rcpp::export]]
+void lpcXPtrFinalizer(SEXP ptr) {
+  IloRangeArray* c = (IloRangeArray*)R_ExternalPtrAddr(ptr);
+  if (c) {
+    c->end();
+    delete c;
+    R_ClearExternalPtr(ptr);
+  }
+  delete c;
+}
+
+// Delete CPLEX objective coeff array
+// [[Rcpp::export]]
+void lpobjXPtrFinalizer(SEXP ptr) {
+  IloObjective* obj = (IloObjective*)R_ExternalPtrAddr(ptr);
+  if (obj) {
+    obj->end();
+    delete obj;
+    R_ClearExternalPtr(ptr);
+  }
+}
 
 // Initialize a CPLEX problem
 // [[Rcpp::export]]
@@ -79,7 +108,7 @@ Rcpp::List initProb(const char* name, double tol_bnd) {
 
   // environment object with pointer
   SEXP xpenv = R_MakeExternalPtr(env, R_NilValue, R_NilValue);
-  R_RegisterCFinalizer(xpenv, lpenvXPtrFinalizer);
+  // R_RegisterCFinalizer(xpenv, lpenvXPtrFinalizer);
 
   // variable array object with pointer
   SEXP xpx = R_MakeExternalPtr(x, R_NilValue, R_NilValue);

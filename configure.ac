@@ -1,4 +1,4 @@
-AC_INIT([cobrarCPLEX], [0.1.0], [s.waschina@nutrinf.uni-kiel.de])
+AC_INIT([cobrarCPLEX], [0.1.1], [s.waschina@nutrinf.uni-kiel.de])
 
 FOUND_ALL="no"
 
