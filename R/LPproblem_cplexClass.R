@@ -64,7 +64,7 @@ setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
 
             # column (variable) bounds and objective function
             setColsBndsObjCoefs(lp,
-                                j = c(1:nCols)-1,
+                                j = c(1:nCols),
                                 lb = lb,
                                 ub = ub,
                                 obj_coef = obj)
@@ -141,7 +141,7 @@ setMethod("setColsBndsObjCoefs", signature(lp = "LPproblem_cplex"),
           function(lp, j, lb, ub, obj_coef) {
 
             setColsBndsObjCoefsLP(lp@ptr.obj, lp@ptr.x,
-                                  as.integer(j),
+                                  as.integer(j)-1,
                                   as.numeric(lb),
                                   as.numeric(ub),
                                   as.numeric(obj_coef))
