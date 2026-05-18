@@ -1,6 +1,6 @@
 ## Use the C++ compiler
 CXX=@CXX@
-CXX_STD=CXX11
+## CXX_STD=CXX11
 
 ## Include compiler and linker flags
 PKG_CPPFLAGS=@PKG_CPPFLAGS@

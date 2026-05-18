@@ -1,6 +1,6 @@
 Package: cobrarCPLEX
 Title: Enable CPLEX as LP Solver in cobrar
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Silvio", "Waschina", , "s.waschina@nutrinf.uni-kiel.de", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6290-3593"))
