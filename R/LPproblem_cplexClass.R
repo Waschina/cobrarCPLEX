@@ -37,11 +37,11 @@ setMethod(f = "initialize",
           }
 )
 
-#' @export
-setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
-
-          function(lp, nCols, nRows, mat, ub, lb, obj, rlb, rtype, lpdir,
-                   rub = NULL, ctype = NULL) {
+.loadLPprob_cobrar <- getFromNamespace("loadLPprob", "cobrar")
+setMethod(f = .loadLPprob_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, nCols, nRows, mat, ub, lb, obj, rlb, rtype,
+                                lpdir, rub = NULL, ctype = NULL) {
 
             # # problem dimensions
             addCols(lp, ncols = nCols)
@@ -103,31 +103,34 @@ setMethod("loadLPprob", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("setObjDirection", signature(lp = "LPproblem_cplex"),
-          function(lp, lpdir) {
+.setObjDirection_cobrar <- getFromNamespace("setObjDirection", "cobrar")
+setMethod(f = .setObjDirection_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, lpdir) {
             setObjDirLP(lp@ptr.obj, lpdir)
           }
 )
 
-setGeneric("addCols", function(lp, ...) {
-  standardGeneric("addCols")
-})
-setMethod("addCols", signature(lp = "LPproblem_cplex"),
-          function(lp, ncols) {
+.addCols_cobrar <- getFromNamespace("addCols", "cobrar")
+setMethod(f = .addCols_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, ncols) {
             addColsLP(lp@ptr.env, lp@ptr.x, as.integer(ncols))
           }
 )
 
-
-setMethod("addRows", signature(lp = "LPproblem_cplex"),
-          function(lp, nrows) {
+.addRows_cobrar <- getFromNamespace("addRows", "cobrar")
+setMethod(f = .addRows_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, nrows) {
             addRowsLP(lp@ptr.env, lp@ptr.c, as.integer(nrows))
           }
 )
 
-
-setMethod("loadMatrix", signature(lp = "LPproblem_cplex"),
-          function(lp, ne, ia, ja, ra) {
+.loadMatrix_cobrar <- getFromNamespace("loadMatrix", "cobrar")
+setMethod(f = .loadMatrix_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, ne, ia, ja, ra) {
             loadMatrixLP(lp@ptr.x, lp@ptr.c,
                          as.integer(ne),
                          as.integer(ia),
@@ -136,9 +139,10 @@ setMethod("loadMatrix", signature(lp = "LPproblem_cplex"),
           }
 )
 
-
-setMethod("setColsBndsObjCoefs", signature(lp = "LPproblem_cplex"),
-          function(lp, j, lb, ub, obj_coef) {
+.setColsBndsObjCoefs_cobrar <- getFromNamespace("setColsBndsObjCoefs", "cobrar")
+setMethod(f = .setColsBndsObjCoefs_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, j, lb, ub, obj_coef) {
 
             setColsBndsObjCoefsLP(lp@ptr.obj, lp@ptr.x,
                                   as.integer(j)-1,
@@ -148,35 +152,11 @@ setMethod("setColsBndsObjCoefs", signature(lp = "LPproblem_cplex"),
           }
 )
 
+.setRowsBnds_cobrar <- getFromNamespace("setRowsBnds", "cobrar")
+setMethod(f = .setRowsBnds_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, i, lb, ub , type) {
 
-# setMethod("setColsKind", signature(lp = "LPproblem_cplex"),
-#           function(lp, j, kind) {
-#             setColsKindLP(lp@ptr,
-#                           as.integer(j),
-#                           as.integer(kind))
-#           }
-# )
-
-
-setMethod("setRowsBnds", signature(lp = "LPproblem_cplex"),
-          function(lp, i, lb, ub , type) {
-
-
-            # type <- sapply(type,
-            #                function(x) switch(EXPR = x,
-            #                                   "F" = glpkPar$GLP_FR,
-            #                                   "L" = glpkPar$GLP_LO,
-            #                                   "U" = glpkPar$GLP_UP,
-            #                                   "D" = glpkPar$GLP_DB,
-            #                                   "E" = glpkPar$GLP_FX,
-            #                                   glpkPar$GLP_FX))
-            #
-            # if (is.null(type)) {
-            #   Ctype <- as.null(type)
-            # }
-            # else {
-            #   Ctype <- as.integer(type)
-            # }
             indE <- which(type == "E")
             ub[indE] <- lb[indE]
 
@@ -199,8 +179,10 @@ setMethod("setRowsBnds", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("solveLp", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.solveLp_cobrar <- getFromNamespace("solveLp", "cobrar")
+setMethod(f = .solveLp_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
             out <- solveCPLEX(lp@ptr, lp@ptr.mod, lp@ptr.x, lp@ptr.c, lp@ptr.obj)
 
             term <- switch(EXPR = out+1,
@@ -268,8 +250,10 @@ setMethod("solveLp", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("getSolStat", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.getSolStat_cobrar <- getFromNamespace("getSolStat", "cobrar")
+setMethod(f = .getSolStat_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
 
             out <- getSolStatLP(lp@ptr)
 
@@ -290,16 +274,20 @@ setMethod("getSolStat", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("getObjValue", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.getObjValue_cobrar <- getFromNamespace("getObjValue", "cobrar")
+setMethod(f = .getObjValue_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
             out <- getObjVal(lp@ptr)
 
             return(out)
           }
 )
 
-setMethod("getColsPrimal", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.getColsPrimal_cobrar <- getFromNamespace("getColsPrimal", "cobrar")
+setMethod(f = .getColsPrimal_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
 
             out <- getColsPrimalLP(lp@ptr, lp@ptr.env, lp@ptr.x)
 
@@ -307,8 +295,10 @@ setMethod("getColsPrimal", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("getRedCosts", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.getRedCosts_cobrar <- getFromNamespace("getRedCosts", "cobrar")
+setMethod(f = .getRedCosts_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
 
             out <- getColsDualLP(lp@ptr, lp@ptr.env, lp@ptr.x)
 
@@ -316,8 +306,10 @@ setMethod("getRedCosts", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("addSingleConstraint", signature(lp = "LPproblem_cplex"),
-          function(lp, coeffs, lb, ub, type) {
+.addSingleConstraint_cobrar <- getFromNamespace("addSingleConstraint", "cobrar")
+setMethod(f = .addSingleConstraint_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, coeffs, lb, ub, type) {
 
             # add new row to constraint matrix
             addRows(lp, nrows = 1)
@@ -343,8 +335,10 @@ setMethod("addSingleConstraint", signature(lp = "LPproblem_cplex"),
           }
 )
 
-setMethod("fvaJob", signature(lp = "LPproblem_cplex"),
-          function(lp, ind) {
+.fvaJob_cobrar <- getFromNamespace("fvaJob", "cobrar")
+setMethod(f = .fvaJob_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp, ind) {
 
             fvares <- fvaLP(lp@ptr, lp@ptr.mod, lp@ptr.x, lp@ptr.c, lp@ptr.obj,
                             as.integer(ind-1))
@@ -353,9 +347,10 @@ setMethod("fvaJob", signature(lp = "LPproblem_cplex"),
           }
 )
 
-
-setMethod("deleteLP", signature(lp = "LPproblem_cplex"),
-          function(lp) {
+.deleteLP_cobrar <- getFromNamespace("deleteLP", "cobrar")
+setMethod(f = .deleteLP_cobrar,
+          signature = signature(lp = "LPproblem_cplex"),
+          definition = function(lp) {
             out <- TRUE
 
             lpXPtrFinalizer(lp@ptr)

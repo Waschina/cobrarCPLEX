@@ -95,6 +95,7 @@ Rcpp::List initProb(const char* name, double tol_bnd) {
 
   //set feasibility/bound tolerance for simplex
   cplex->setParam(IloCplex::Param::Simplex::Tolerances::Feasibility, tol_bnd);
+  cplex->setParam(IloCplex::Param::Threads, 1); // TODO
 
   // cplex object with pointer
   SEXP xp = R_MakeExternalPtr(cplex, R_NilValue, R_NilValue);

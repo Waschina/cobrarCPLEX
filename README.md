@@ -4,6 +4,7 @@
 # cobrarCPLEX
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
 An extension of the R-package
@@ -44,8 +45,8 @@ library(cobrarCPLEX)
 #> Loading required package: cobrar
 #> Loading required package: Matrix
 #> cobrar uses...
-#>  - libSBML (v. 5.18.0)
-#>  - glpk (v. 4.65)
+#>  - libSBML (v. 5.20.5)
+#>  - glpk (v. 5.0)
 #> Using cplex version 22010100
 
 # Download the E. coli model "iML1515" from http://bigg.ucsd.edu/
@@ -57,11 +58,11 @@ mod <- readSBMLmod(modfile)
 COBRAR_SETTINGS("SOLVER","glpk")
 print(system.time(fba(mod)))
 #>    user  system elapsed 
-#>   0.216   0.000   0.216
+#>   0.147   0.000   0.146
 
 # FBA with CPLEX
 COBRAR_SETTINGS("SOLVER","cplex")
 system.time(fba(mod))
 #>    user  system elapsed 
-#>    0.04    0.00    0.04
+#>   0.033   0.000   0.033
 ```
